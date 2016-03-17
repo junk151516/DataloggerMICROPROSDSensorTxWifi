@@ -78,7 +78,7 @@ SoftwareSerial mySerial(8, 9); // RX, TX
  unsigned int characterOfEnd=69;
  unsigned int characterOfStart=83;
  volatile char pendingTasks[10];
- char myBuffer[50];
+ char myBuffer[50]; // el problematico
  char numberOfFile[5];
  char *formatOfFile= ".xls";
  char nameWithFormat[30]= {"F0.xls"};      
@@ -104,7 +104,8 @@ void setup() {
   if (!SD.begin(chipSelect)) {
     Serial.println("Card failed, or not present");
     // don't do anything more:
-    return;
+    //aqui muere todo.
+    //return;
   }
   Serial.println("card initialized.");
   
@@ -125,7 +126,7 @@ void setup() {
   // Initialize IRQ in digital pin #D2 and prepare it as well for digital reading
   pinMode(resetPin,INPUT);
   attachInterrupt(digitalPinToInterrupt(resetPin), eventIRQHandling, RISING);
-                                   
+  cleanBuffers();
 }
 
 void loop() {  
@@ -170,12 +171,12 @@ void checkForPendingTasks(){
   
   if ((pendingTasks[0]==noTasksPending) && (pendingTasks[1]==noTasksPending))
   {
-    // Do nothing!
+    //Serial.println("no task");
   }
   else{
-    
-    // Check if it's needing to send data to wifi task and its state allows it
-    if ((pendingTasks[0]==sendingPackageDataToWifiTask) && (globalState!=writingOnSDCardState) && (HIGH==checkDigitalInputByAnalogReading(wifiModuleEnablePin)))
+    Serial.println("ocupado");
+    // Check if it's needing to send data to wifi task and its state allows it// se comenta la ultima parte ya que los led dañados no dejan enviar datos por WIFI
+    if ((pendingTasks[0]==sendingPackageDataToWifiTask) && (globalState!=writingOnSDCardState) )//&& (HIGH==checkDigitalInputByAnalogReading(wifiModuleEnablePin)))
     {
       sendPackageDataToWifiModule();
       
@@ -381,7 +382,7 @@ void writeKarelDataOnSDWithComma(char byteWithCommaReceived){
   
   // if the file isn't open, pop up an error:
   else {
-	   Serial.println("error opening datalog.txt");
+	   Serial.println("error Sdcard");
   }
 }
 
