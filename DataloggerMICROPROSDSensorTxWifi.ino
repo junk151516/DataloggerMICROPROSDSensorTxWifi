@@ -383,6 +383,10 @@ void writeKarelDataOnSDWithComma(char byteWithCommaReceived){
   // if the file isn't open, pop up an error:
   else {
 	   Serial.println("error Sdcard");
+     SD.begin(chipSelect);
+     if (!SD.begin(chipSelect)) {
+        Serial.println("Card failed, or not present");
+     }
   }
 }
 
